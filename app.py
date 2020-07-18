@@ -12,6 +12,7 @@ def hello():
 def getData():
     return measurement[0]
 
+
 @app.route('/lastMeasurement', methods=['POST'])
 def saveLastMeasurement():
     data = request.json

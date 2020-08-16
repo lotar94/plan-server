@@ -8,9 +8,8 @@ measurement = ['sin Informacion']
 def hello():
     return 'Hola que hace'
 
-@app.route('/getData')
-def getData():
-    return measurement[0]
+@app.route('/getData')          
+def getData(): return measurement[0]
 
 
 @app.route('/lastMeasurement', methods=['POST'])

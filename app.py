@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 import os.path
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 measurement = ['sin Information']
 

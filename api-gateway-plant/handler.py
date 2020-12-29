@@ -3,7 +3,7 @@ import json
 
 def hello(event, context):
     body = {
-        "message": "Testing api gateway",
+        "message": "Hola que hace!!",
         "input": event
     }
 

@@ -50,7 +50,7 @@ def addMeasurement(event, context):
         print(responseInsert)
         #se crea json de respuesta
         body = {
-                "mensaje": "Existe"
+                "mensaje": "Mediciones ingresadas exitosamente"
             }
 
         response = {

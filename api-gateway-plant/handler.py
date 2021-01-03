@@ -25,42 +25,44 @@ def addMeasurement(event, context):
         table = dynamodb.Table('measurementTable')
 
         #Se obtiene el body desde el event de la funcion lambda
-        jsonPerson = json.loads(event['body'])
+        jsonRequest = json.loads(event['body'])
         print("-------------El body-------------")
-        print(jsonPerson)
+        print(jsonRequest)
+        print(jsonRequest['room_temperature'])
         print("-------------El body-------------")
-        name = json.loads(jsonPerson['rutCliente']) #Se saca nombre del body
 
-        #se crea json de respuesta
-        body = {
-            "PFCreaCasoSalidaResp": [
-                {
-                "success": true,
-                "rutcliente": "16076053-2",
-                "idCaso": "50001000001QnawAAC",
-                "errors": ""
-                }
-            ],
-            "PFCreaCasoSalidaReq": null
-        }
-        response = {
-            "codigo": 200,
-            "fakeResponse": json.dumps(body)
-        }
+        #room_temperature = json.loads(jsonRequest['room_temperature']) #Se saca temperatura ambiente del body
+        #soil_moisture = json.loads(jsonRequest['soil_moisture']) #Se saca humedad de la tierra del body
+
+
+        print("-------------Los valores2-------------")
+        print(jsonRequest['room_temperature'])
+        print(jsonRequest['soil_moisture'])
+        print("-------------Los valores2-------------")
+        
         #Se inserta nombre en la tabla de personsTable
         responseInsert = table.put_item(
-           Item={
-                'name': name
+            Item={
+                'room_temperature': jsonRequest['room_temperature'],
+                'soil_moisture': jsonRequest['soil_moisture']
             }
         )
         print(responseInsert)
+        #se crea json de respuesta
+        body = {
+                "mensaje": "Existe"
+            }
 
+        response = {
+            "statusCode": 200,
+            "body": json.dumps(body)
+        }
         return response
     
     except Exception as e:
-        print("----------ERROR AL AGREGAR UNA PERSONA----------")
+        print("----------ERROR AL AGREGAR LAS MEDICIONES----------")
         print(e)
-        print("----------ERROR AL AGREGAR UNA PERSONA----------")
+        print("----------ERROR AL AGREGAR LAS MEDICIONES----------")
         return -1
 
 def getAllMeasurement(event, context):
@@ -86,46 +88,4 @@ def getAllMeasurement(event, context):
         return response
     except Exception as e:
         print("---------El error get all---------")
-        print(e)
-
-def updatePerson(event, context):
-    try:
-        print("-------event-------")
-        print(event)
-        print("-------event-------")
-        dynamodb = boto3.resource('dynamodb')
-        table = dynamodb.Table('personsTable')
-
-        print("-------event['body']-------")
-        print(event['body'])
-        print("-------event['body']-------")
-
-        #Se obtiene el body desde el event de la funcion lambda
-        jsonPerson = json.loads(event['body'])
-        print("-------jsonPerson-------")
-        print(jsonPerson)
-        print("-------jsonPerson-------")
-        print("-------name-------")
-        name = jsonPerson['name'] #Se saca nombre del body
-        print(name)
-        print("-------name-------")
-        print("-------new_name-------")
-        new_name = jsonPerson['new_name'] #Se saca new_nombre del body
-        print(new_name)
-        print("-------new_name-------")
-
-        response = table.update_item(
-            Key={
-                'name': name
-            },
-            UpdateExpression="set name = :n",
-            ExpressionAttributeValues={
-                ':n': new_name
-            },
-            ReturnValues="UPDATED_NEW"
-        )
-
-        return response
-    except Exception as e:
-        print("---------El error update---------")
         print(e)

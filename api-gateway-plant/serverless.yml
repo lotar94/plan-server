@@ -1,11 +1,16 @@
 service: api-gateway-plant
 
-frameworkVersion: '2'
+app: plant-server
+
+frameworkVersion: "2"
+provider:
+  name: aws
+  runtime: python3.8
 
 functions:
   hello:
     handler: handler.hello
-    events: 
+    events:
       - http:
           path: saludos/{name}
           method: get
@@ -29,11 +34,15 @@ resources:
       Properties:
         TableName: measurementTable
         AttributeDefinitions:
-          - AttributeName: name
+          - AttributeName: room_temperature
+            AttributeType: S
+          - AttributeName: soil_moisture
             AttributeType: S
         KeySchema:
-          - AttributeName: name
+          - AttributeName: room_temperature
             KeyType: HASH
+          - AttributeName: soil_moisture
+            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
@@ -43,7 +52,7 @@ resources:
       Properties:
         PolicyName: lambda-dynamodb
         PolicyDocument:
-          Version: '2012-10-17'
+          Version: "2012-10-17"
           Statement:
             - Effect: Allow
               Action:
@@ -52,6 +61,6 @@ resources:
                 - dynamodb:DeleteItem
                 - dynamodb:Scan
                 - dynamodb:UpdateItem
-              Resource: arn:aws:dynamodb:*:*:table/personsTable
+              Resource: arn:aws:dynamodb:*:*:table/measurementTable
         Roles:
           - Ref: IamRoleLambdaExecution
